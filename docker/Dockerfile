@@ -1,3 +1,4 @@
+#!/bin/bash
 # Use the latest slim version of Debian
 FROM --platform=$TARGETPLATFORM debian:bookworm-slim
 
@@ -13,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     npm \
     openssh-server \
     sudo \
+    dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 # Set up SSH
@@ -29,6 +31,7 @@ COPY .bashrc /etc/skel/.bashrc
 
 # Copy the script to ensure .bashrc is in the root directory
 COPY initialize.sh /usr/local/bin/initialize.sh
+RUN dos2unix /usr/local/bin/initialize.sh
 RUN chmod +x /usr/local/bin/initialize.sh
 
 # Ensure the virtual environment and pip setup
@@ -39,5 +42,3 @@ EXPOSE 22
 
 # Init .bashrc
 CMD ["/usr/local/bin/initialize.sh"]
-
-
